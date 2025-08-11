@@ -27,16 +27,22 @@ import {
   ListItemIcon, 
   ListItemText, 
   Divider,
-  Switch,
   FormControlLabel,
   CircularProgress,
-  Fade
+  Fade,
+  TextField,
+  Card,
+  CardContent,
+  Checkbox,
+  Alert,
+  Paper
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import CodeIcon from '@mui/icons-material/Code';
 import SchoolIcon from '@mui/icons-material/School';
 import ScienceIcon from '@mui/icons-material/Science';
+import LoginIcon from '@mui/icons-material/Login';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
@@ -170,6 +176,7 @@ function App() {
     { text: 'Projects', icon: <CodeIcon />, path: '/projects' },
     { text: 'Tutorials', icon: <SchoolIcon />, path: '/tutorials' },
     { text: 'Playground', icon: <ScienceIcon />, path: '/playground' },
+    { text: 'Login', icon: <LoginIcon />, path: '/login' },
   ];
   
   const drawer = (
@@ -285,6 +292,7 @@ function App() {
               <Route path="/projects" element={<Projects setLoading={setLoading} />} />
               <Route path="/tutorials" element={<Tutorials setLoading={setLoading} />} />
               <Route path="/playground" element={<Playground setLoading={setLoading} />} />
+              <Route path="/login" element={<Login setLoading={setLoading} />} />
             </Routes>
           </Container>
           
@@ -352,7 +360,7 @@ function Home({ setLoading }) {
           borderRadius: 3
         }}
       >
-        <Typography variant="h1" component="h1" gutterBottom>
+        <Typography variant="h2" component="h1" gutterBottom sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
           Welcome to Three Eyed Coders
         </Typography>
         <Typography variant="h5" paragraph sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}>
@@ -524,7 +532,7 @@ function Home({ setLoading }) {
 }
 
 function Projects({ setLoading }) {
-  const [projects, setProjects] = useState([
+  const [projects] = useState([
     {
       id: 1,
       title: 'Linear Regression Demo',
@@ -660,7 +668,7 @@ function Projects({ setLoading }) {
 }
 
 function Tutorials({ setLoading }) {
-  const [tutorials, setTutorials] = useState([
+  const [tutorials] = useState([
     {
       id: 1,
       title: 'Machine Learning Basics',
@@ -970,6 +978,285 @@ console.log(factorial(5)); // 120`);
           Explore More Examples
         </Button>
       </Box>
+    </Box>
+  );
+}
+
+function Login({ setLoading }) {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
+  const [errors, setErrors] = useState({});
+  const [showError, setShowError] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setShowError(false);
+    
+    if (validateForm()) {
+      setLoading(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        setLoading(false);
+        // Simulate login failure for demo
+        if (formData.email === 'demo@example.com' && formData.password === 'password') {
+          alert('Login successful! Welcome to Three Eyed Coders');
+          window.location.hash = '#/';
+        } else {
+          setShowError(true);
+        }
+      }, 1500);
+    }
+  };
+
+  const handleForgotPassword = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      alert('Password reset link sent to your email!');
+    }, 1000);
+  };
+
+  const handleSignUp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      alert('Redirecting to sign up page...');
+    }, 800);
+  };
+
+  return (
+    <Box sx={{ 
+      minHeight: '80vh', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      py: 4
+    }}>
+      <Container maxWidth="sm">
+        <Card 
+          sx={{ 
+            borderRadius: 4,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Header Section */}
+          <Box 
+            sx={{ 
+              background: 'linear-gradient(135deg, #2e7d32 0%, #1976d2 100%)',
+              color: 'white',
+              py: 4,
+              textAlign: 'center'
+            }}
+          >
+            <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
+              Welcome Back
+            </Typography>
+            <Typography variant="body1" sx={{ opacity: 0.9 }}>
+              Sign in to your Three Eyed Coders account
+            </Typography>
+          </Box>
+
+          <CardContent sx={{ p: 4 }}>
+            {/* Error Alert */}
+            {showError && (
+              <Alert 
+                severity="error" 
+                sx={{ mb: 3 }}
+                onClose={() => setShowError(false)}
+              >
+                Invalid email or password. Try demo@example.com / password
+              </Alert>
+            )}
+
+            {/* Login Form */}
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={formData.email}
+                onChange={handleInputChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '&:hover fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                  },
+                }}
+              />
+              
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={formData.password}
+                onChange={handleInputChange}
+                error={!!errors.password}
+                helperText={errors.password}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '&:hover fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                  },
+                }}
+              />
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, mb: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="rememberMe"
+                      checked={formData.rememberMe}
+                      onChange={handleInputChange}
+                      color="primary"
+                    />
+                  }
+                  label="Remember me"
+                />
+                
+                <Link
+                  component="button"
+                  type="button"
+                  variant="body2"
+                  onClick={handleForgotPassword}
+                  sx={{ 
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </Box>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontWeight: 600,
+                  fontSize: '1.1rem',
+                  background: 'linear-gradient(135deg, #2e7d32 0%, #1976d2 100%)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #1b5e20 0%, #1565c0 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Sign In
+              </Button>
+
+              {/* Demo Credentials */}
+              <Paper 
+                sx={{ 
+                  p: 2, 
+                  mt: 2, 
+                  bgcolor: 'grey.50', 
+                  borderRadius: 2,
+                  border: '1px dashed',
+                  borderColor: 'grey.300'
+                }}
+              >
+                <Typography variant="caption" color="text.secondary" display="block" gutterBottom>
+                  Demo Credentials:
+                </Typography>
+                <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                  Email: demo@example.com
+                </Typography>
+                <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                  Password: password
+                </Typography>
+              </Paper>
+
+              {/* Sign Up Link */}
+              <Box sx={{ textAlign: 'center', mt: 3 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Don't have an account?{' '}
+                  <Link
+                    component="button"
+                    type="button"
+                    variant="body2"
+                    onClick={handleSignUp}
+                    sx={{ 
+                      fontWeight: 600,
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      '&:hover': { textDecoration: 'underline' }
+                    }}
+                  >
+                    Sign up here
+                  </Link>
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {/* Additional Features */}
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            By signing in, you agree to our Terms of Service and Privacy Policy
+          </Typography>
+        </Box>
+      </Container>
     </Box>
   );
 }
