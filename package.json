@@ -1,0 +1,29 @@
+{
+  "name": "three-eyed-coders",
+  "version": "1.0.0",
+  "description": "An open-source platform for contributing to and learning new technologies",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd frontend && npm start",
+    "start:backend": "cd backend && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "education",
+    "open-source",
+    "learning",
+    "tutorials",
+    "projects"
+  ],
+  "author": "YTT Global Services",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YTTGlobalServices/three-eyed-coders.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YTTGlobalServices/three-eyed-coders/issues"
+  },
+  "homepage": "https://github.com/YTTGlobalServices/three-eyed-coders#readme"
+}
