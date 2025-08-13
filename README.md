@@ -232,22 +232,6 @@ Copyright (c) 2025 YTT Global Services
 All rights reserved.
 ```
 
-<div align="center">
-
-| Document | Description |
-|----------|-------------|
-| 📋 [**LICENSE**](LICENSE) | Full license terms and conditions |
-| 📄 [**COPYRIGHT**](COPYRIGHT) | Additional copyright information |
-
-</div>
-
-### ⚖️ **License Summary**
-
-> The YTT Global Services License is a proprietary license that grants users the right to use, modify, and distribute this software in accordance with the terms specified in the LICENSE file. 
-> 
-<div align="center">
----
-
 ### 🌟 **Made with ❤️ by the Three Eyed Coders Community**
 
 *Building the future of technology education, one line of code at a time*
