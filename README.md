@@ -245,12 +245,7 @@ All rights reserved.
 
 > The YTT Global Services License is a proprietary license that grants users the right to use, modify, and distribute this software in accordance with the terms specified in the LICENSE file. 
 > 
-> **⚠️ Important**: Unauthorized copying, distribution, or modification of this software is strictly prohibited.
-
 <div align="center">
-
-**📧 For permission requests or licensing questions, please contact YTT Global Services**
-
 ---
 
 ### 🌟 **Made with ❤️ by the Three Eyed Coders Community**

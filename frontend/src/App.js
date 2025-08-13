@@ -35,7 +35,9 @@ import {
   CardContent,
   Checkbox,
   Alert,
-  Paper
+  Paper,
+  Fab,
+  Tooltip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -45,69 +47,162 @@ import ScienceIcon from '@mui/icons-material/Science';
 import LoginIcon from '@mui/icons-material/Login';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import Psychology from '@mui/icons-material/Psychology';
+import SmartToy from '@mui/icons-material/SmartToy';
 
-// Create a theme function
+// Import AI components
+import AIAssistant from './components/AIAssistant';
+import ProjectMatcher from './components/ProjectMatcher';
+import aiCodeAnalysis from './services/aiCodeAnalysis';
+
+// Create a modern theme function with enhanced styling
 const createAppTheme = (mode) => createTheme({
   palette: {
     mode,
     primary: {
-      main: '#2e7d32', // Green color for tech theme
+      main: '#667eea',
+      light: '#8fa7f3',
+      dark: '#4a56cc',
     },
     secondary: {
-      main: '#1976d2', // Blue color
+      main: '#764ba2',
+      light: '#9a6bc7',
+      dark: '#533471',
+    },
+    success: {
+      main: '#4facfe',
+      light: '#7bc8ff',
+      dark: '#2e7bcc',
     },
     ...(mode === 'light'
       ? {
           background: {
-            default: '#f5f5f5',
-            paper: '#ffffff',
+            default: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+            paper: 'rgba(255, 255, 255, 0.95)',
           },
         }
       : {
           background: {
-            default: '#121212',
-            paper: '#1e1e1e',
+            default: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+            paper: 'rgba(30, 30, 30, 0.95)',
           },
         }),
   },
   typography: {
     fontFamily: [
+      'Inter',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Segoe UI',
       'Roboto',
-      'Helvetica',
-      'Arial',
       'sans-serif',
     ].join(','),
     h1: {
-      fontWeight: 700,
-      marginBottom: '1rem',
+      fontWeight: 800,
+      marginBottom: '1.5rem',
+      letterSpacing: '-0.02em',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
     },
     h2: {
-      fontWeight: 600,
-      marginBottom: '0.75rem',
+      fontWeight: 700,
+      marginBottom: '1rem',
+      letterSpacing: '-0.01em',
     },
     h3: {
       fontWeight: 600,
-      marginBottom: '0.5rem',
+      marginBottom: '0.75rem',
     },
+    button: {
+      fontWeight: 600,
+      letterSpacing: '0.02em',
+    },
+  },
+  shape: {
+    borderRadius: 16,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 12,
           textTransform: 'none',
           fontWeight: 600,
+          padding: '12px 24px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
+          },
+        },
+        contained: {
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: 20,
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 12,
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.15)',
+            },
+            '&.Mui-focused': {
+              background: 'rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+            },
+          },
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         },
       },
     },
   },
 });
 
-// Styled components
+// Modern styled components with glassmorphism and enhanced effects
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: '#fff',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
   color: theme.palette.primary.main,
-  boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
 }));
 
 const NavButton = styled(Button)(({ theme }) => ({
@@ -115,40 +210,117 @@ const NavButton = styled(Button)(({ theme }) => ({
   fontWeight: 600,
   textTransform: 'none',
   fontSize: '1rem',
+  borderRadius: '12px',
+  padding: '8px 16px',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  position: 'relative',
+  overflow: 'hidden',
   '&:hover': {
-    backgroundColor: 'rgba(46, 125, 50, 0.08)',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(102, 126, 234, 0.2)',
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+    transition: 'left 0.5s',
+  },
+  '&:hover::before': {
+    left: '100%',
   },
 }));
 
 const CardBox = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  borderRadius: '8px',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  borderRadius: '20px',
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  transition: 'box-shadow 0.3s ease',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)',
+  },
   '&:hover': {
-    boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+    transform: 'translateY(-8px)',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
   },
 }));
 
 const FeatureCard = styled(Box)(({ theme }) => ({
-  backgroundColor: '#fff',
-  borderRadius: '8px',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  borderRadius: '20px',
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: '-50%',
+    left: '-50%',
+    width: '200%',
+    height: '200%',
+    background: 'conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent)',
+    animation: 'rotate 4s linear infinite',
+    opacity: 0,
+    transition: 'opacity 0.3s ease',
+  },
   '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+    transform: 'translateY(-10px) scale(1.02)',
+    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.2)',
+  },
+  '&:hover::after': {
+    opacity: 1,
+  },
+  '@keyframes rotate': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' },
   },
 }));
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // AI Assistant states
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const [currentCode, setCurrentCode] = useState('');
+  const [userSkills, setUserSkills] = useState(['React', 'JavaScript', 'TypeScript', 'Node.js']);
+  const [userExperience, setUserExperience] = useState('intermediate');
   
   // Load theme preference from localStorage
   useEffect(() => {
@@ -171,11 +343,12 @@ function App() {
     setDarkMode(!darkMode);
   };
   
-  const navItems = [
+  const navigationItems = [
     { text: 'Home', icon: <HomeIcon />, path: '/' },
     { text: 'Projects', icon: <CodeIcon />, path: '/projects' },
     { text: 'Tutorials', icon: <SchoolIcon />, path: '/tutorials' },
     { text: 'Playground', icon: <ScienceIcon />, path: '/playground' },
+    { text: 'AI Matcher', icon: <Psychology />, path: '/ai-matcher' },
     { text: 'Login', icon: <LoginIcon />, path: '/login' },
   ];
   
@@ -186,7 +359,7 @@ function App() {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
+        {navigationItems.map((item) => (
           <ListItem 
             key={item.text} 
             component={RouterLink} 
@@ -225,7 +398,7 @@ function App() {
                   </Typography>
                 </Box>
                 <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1, alignItems: 'center' }}>
-                  {navItems.map((item) => (
+                  {navigationItems.map((item) => (
                     <NavButton 
                       key={item.text}
                       component={RouterLink} 
@@ -288,10 +461,17 @@ function App() {
           {/* Main Content */}
           <Container component="main" sx={{ flex: 1, py: 4 }}>
             <Routes>
-              <Route path="/" element={<Home setLoading={setLoading} />} />
-              <Route path="/projects" element={<Projects setLoading={setLoading} />} />
-              <Route path="/tutorials" element={<Tutorials setLoading={setLoading} />} />
-              <Route path="/playground" element={<Playground setLoading={setLoading} />} />
+              <Route path="/" element={<Home setAiAssistantOpen={setAiAssistantOpen} />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/tutorials" element={<Tutorials />} />
+              <Route path="/playground" element={<Playground />} />
+              <Route path="/ai-matcher" element={
+                <ProjectMatcher 
+                  userSkills={userSkills} 
+                  userExperience={userExperience}
+                  preferences={{}}
+                />
+              } />
               <Route path="/login" element={<Login setLoading={setLoading} />} />
             </Routes>
           </Container>
@@ -326,12 +506,48 @@ function App() {
             </Container>
           </Box>
         </Box>
+
+        {/* AI Assistant Floating Action Button */}
+        <Tooltip title="Open AI Assistant" placement="left">
+          <Fab
+            color="primary"
+            onClick={() => setAiAssistantOpen(true)}
+            sx={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
+                transform: 'scale(1.1)',
+                boxShadow: '0 12px 30px rgba(102, 126, 234, 0.4)',
+              },
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+            className="pulse"
+          >
+            <SmartToy />
+          </Fab>
+        </Tooltip>
+
+        {/* AI Assistant Component */}
+        <AIAssistant
+          isOpen={aiAssistantOpen}
+          onClose={() => setAiAssistantOpen(false)}
+          currentCode={currentCode}
+          projectContext={{
+            userSkills,
+            userExperience,
+            currentProject: null
+          }}
+        />
       </Router>
     </ThemeProvider>
   );
 }
 
-function Home({ setLoading }) {
+function Home({ setAiAssistantOpen, setLoading }) {
   const handleExploreProjects = () => {
     setLoading(true);
     setTimeout(() => {
@@ -354,176 +570,682 @@ function Home({ setLoading }) {
       <CardBox 
         sx={{ 
           textAlign: 'center', 
-          py: { xs: 4, md: 6 }, 
+          py: { xs: 6, md: 8 }, 
           mb: 6, 
-          background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
-          borderRadius: 3
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+          borderRadius: 4,
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(45deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
+            animation: 'float 6s ease-in-out infinite',
+          },
+          '@keyframes float': {
+            '0%, 100%': { transform: 'translateY(0px)' },
+            '50%': { transform: 'translateY(-10px)' },
+          },
         }}
+        className="floating"
       >
-        <Typography variant="h2" component="h1" gutterBottom sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
+        <Typography 
+          variant="h1" 
+          component="h1" 
+          gutterBottom 
+          sx={{ 
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            mb: 3,
+            textShadow: '0 4px 20px rgba(102, 126, 234, 0.3)',
+          }}
+          className="pulse"
+        >
           Welcome to Three Eyed Coders
         </Typography>
-        <Typography variant="h5" paragraph sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}>
-          An open-source platform for contributing to and learning new technologies. Join our community of developers, share knowledge, and build amazing projects together.
+        <Typography 
+          variant="h5" 
+          paragraph 
+          sx={{ 
+            mb: 4, 
+            maxWidth: '800px', 
+            mx: 'auto',
+            color: 'text.secondary',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            opacity: 0.9,
+          }}
+        >
+          An innovative open-source platform for contributing to and learning cutting-edge technologies. Join our community of developers, share knowledge, and build the future together.
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap' }}>
           <Button 
             variant="contained" 
-            color="primary" 
             size="large" 
             onClick={handleExploreProjects}
-            sx={{ px: 4, py: 1.5 }}
+            className="micro-bounce"
+            sx={{ 
+              px: 5, 
+              py: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                transition: 'left 0.5s',
+              },
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 15px 35px rgba(102, 126, 234, 0.4)',
+                background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
+              },
+              '&:hover::before': {
+                left: '100%',
+              },
+            }}
           >
-            Explore Projects
+            🚀 Explore Projects
           </Button>
           <Button 
             variant="outlined" 
-            color="primary" 
             size="large" 
             onClick={handleStartLearning}
-            sx={{ px: 4, py: 1.5 }}
+            className="micro-bounce"
+            sx={{ 
+              px: 5, 
+              py: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              borderRadius: '16px',
+              border: '2px solid transparent',
+              background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box',
+              color: '#667eea',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+                zIndex: -1,
+              },
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                color: 'white',
+                boxShadow: '0 15px 35px rgba(102, 126, 234, 0.3)',
+              },
+              '&:hover::before': {
+                opacity: 1,
+              },
+            }}
           >
-            Start Learning
+            📚 Start Learning
           </Button>
         </Box>
       </CardBox>
       
+      {/* AI Features Highlight */}
+      <CardBox 
+        sx={{ 
+          textAlign: 'center', 
+          py: 4, 
+          mb: 6,
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+          borderRadius: 4,
+          position: 'relative',
+          overflow: 'hidden',
+          border: '2px solid rgba(102, 126, 234, 0.2)',
+        }}
+        className="floating"
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 3 }}>
+          <SmartToy sx={{ fontSize: 48, color: 'primary.main' }} className="pulse" />
+          <Typography 
+            variant="h4" 
+            sx={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              fontWeight: 800,
+            }}
+          >
+            🤖 AI-Powered Development
+          </Typography>
+        </Box>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 3, maxWidth: '800px', mx: 'auto' }}>
+          Experience the future of coding with our integrated AI assistant that provides intelligent code suggestions, 
+          automated reviews, and personalized project recommendations.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Button
+            variant="contained"
+            startIcon={<AutoAwesome />}
+            onClick={() => setAiAssistantOpen(true)}
+            sx={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            Try AI Assistant
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<Psychology />}
+            component={RouterLink}
+            to="/ai-matcher"
+            sx={{
+              borderColor: 'primary.main',
+              color: 'primary.main',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            AI Project Matcher
+          </Button>
+        </Box>
+      </CardBox>
+
       {/* Features Section */}
-      <Typography variant="h2" align="center" sx={{ mb: 4 }}>
-        What We Offer
+      <Typography 
+        variant="h3" 
+        component="h2" 
+        gutterBottom 
+        sx={{ 
+          textAlign: 'center', 
+          mb: 6,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          fontWeight: 700,
+          letterSpacing: '-0.01em',
+        }}
+      >
+        ✨ Why Choose Three Eyed Coders?
       </Typography>
       
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3, mb: 6 }}>
-        <FeatureCard>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-            <CodeIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 4, mb: 8 }}>
+        <FeatureCard className="floating">
+          <Box
+            sx={{
+              width: 80,
+              height: 80,
+              borderRadius: '20px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 3,
+              mx: 'auto',
+              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1) rotate(5deg)',
+                boxShadow: '0 15px 35px rgba(102, 126, 234, 0.4)',
+              },
+            }}
+          >
+            <CodeIcon sx={{ fontSize: 40, color: 'white' }} />
           </Box>
-          <Typography variant="h4" align="center" gutterBottom>
-            Community Projects
+          <Typography 
+            variant="h5" 
+            component="h3" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 700,
+              color: 'text.primary',
+              mb: 2,
+            }}
+          >
+            Open Source Projects
           </Typography>
-          <Typography align="center" paragraph>
-            Explore and contribute to a wide range of open-source projects created by our community members.
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={{ 
+              lineHeight: 1.7,
+              opacity: 0.8,
+            }}
+          >
+            Contribute to cutting-edge projects and collaborate with developers worldwide. Build your portfolio while making a real impact on the tech community.
           </Typography>
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Button 
-              variant="outlined" 
-              color="primary" 
-              component={RouterLink} 
-              to="/projects"
-              sx={{ px: 3 }}
-            >
-              View Projects
-            </Button>
-          </Box>
         </FeatureCard>
         
-        <FeatureCard>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-            <SchoolIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+        <FeatureCard className="floating" sx={{ animationDelay: '0.2s' }}>
+          <Box
+            sx={{
+              width: 80,
+              height: 80,
+              borderRadius: '20px',
+              background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 3,
+              mx: 'auto',
+              boxShadow: '0 8px 25px rgba(79, 172, 254, 0.3)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1) rotate(-5deg)',
+                boxShadow: '0 15px 35px rgba(79, 172, 254, 0.4)',
+              },
+            }}
+          >
+            <SchoolIcon sx={{ fontSize: 40, color: 'white' }} />
           </Box>
-          <Typography variant="h4" align="center" gutterBottom>
-            Structured Learning
+          <Typography 
+            variant="h5" 
+            component="h3" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 700,
+              color: 'text.primary',
+              mb: 2,
+            }}
+          >
+            Learn & Grow
           </Typography>
-          <Typography align="center" paragraph>
-            Follow guided tutorials and learning paths to master new technologies at your own pace.
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={{ 
+              lineHeight: 1.7,
+              opacity: 0.8,
+            }}
+          >
+            Access comprehensive tutorials, interactive documentation, and mentorship opportunities to accelerate your coding journey and master new technologies.
           </Typography>
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Button 
-              variant="outlined" 
-              color="primary" 
-              component={RouterLink} 
-              to="/tutorials"
-              sx={{ px: 3 }}
-            >
-              Start Learning
-            </Button>
-          </Box>
         </FeatureCard>
         
-        <FeatureCard>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-            <ScienceIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+        <FeatureCard className="floating" sx={{ animationDelay: '0.4s' }}>
+          <Box
+            sx={{
+              width: 80,
+              height: 80,
+              borderRadius: '20px',
+              background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 3,
+              mx: 'auto',
+              boxShadow: '0 8px 25px rgba(250, 112, 154, 0.3)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1) rotate(5deg)',
+                boxShadow: '0 15px 35px rgba(250, 112, 154, 0.4)',
+              },
+            }}
+          >
+            <ScienceIcon sx={{ fontSize: 40, color: 'white' }} />
           </Box>
-          <Typography variant="h4" align="center" gutterBottom>
-            Interactive Playground
+          <Typography 
+            variant="h5" 
+            component="h3" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 700,
+              color: 'text.primary',
+              mb: 2,
+            }}
+          >
+            🧪 Experiment & Innovate
           </Typography>
-          <Typography align="center" paragraph>
-            Experiment with code directly in your browser with our interactive coding playground.
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={{ 
+              lineHeight: 1.7,
+              opacity: 0.8,
+            }}
+          >
+            Use our advanced playground environment to test innovative ideas, experiment with emerging technologies, and prototype next-generation solutions.
           </Typography>
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Button 
-              variant="outlined" 
-              color="primary" 
-              component={RouterLink} 
-              to="/playground"
-              sx={{ px: 3 }}
-            >
-              Try Playground
-            </Button>
-          </Box>
         </FeatureCard>
       </Box>
       
-      {/* Stats Section */}
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="h3" align="center" gutterBottom>
-          Our Community
+      {/* Enhanced Stats Section */}
+      <Box sx={{ mb: 8 }}>
+        <Typography 
+          variant="h3" 
+          align="center" 
+          gutterBottom
+          sx={{
+            mb: 6,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            fontWeight: 700,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          🌟 Our Growing Community
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 3 }}>
-          <CardBox sx={{ textAlign: 'center', py: 3 }}>
-            <Typography variant="h2" color="primary.main" sx={{ fontWeight: 700 }}>
-              150+
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 4 }}>
+          <CardBox 
+            className="floating"
+            sx={{ 
+              textAlign: 'center', 
+              py: 4,
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '3px',
+                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+              },
+            }}
+          >
+            <Typography 
+              variant="h2" 
+              sx={{ 
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 1,
+                fontSize: { xs: '2.5rem', md: '3rem' },
+              }}
+              className="pulse"
+            >
+              250+
             </Typography>
-            <Typography variant="h6">
-              Projects
+            <Typography 
+              variant="h6" 
+              color="text.secondary"
+              sx={{ 
+                fontWeight: 600,
+                opacity: 0.8,
+              }}
+            >
+              🚀 Active Projects
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                mt: 1,
+                opacity: 0.6,
+                fontSize: '0.875rem',
+              }}
+            >
+              Open source contributions
             </Typography>
           </CardBox>
-          <CardBox sx={{ textAlign: 'center', py: 3 }}>
-            <Typography variant="h2" color="primary.main" sx={{ fontWeight: 700 }}>
-              50+
+          
+          <CardBox 
+            className="floating"
+            sx={{ 
+              textAlign: 'center', 
+              py: 4,
+              position: 'relative',
+              overflow: 'hidden',
+              animationDelay: '0.2s',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '3px',
+                background: 'linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)',
+              },
+            }}
+          >
+            <Typography 
+              variant="h2" 
+              sx={{ 
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 1,
+                fontSize: { xs: '2.5rem', md: '3rem' },
+              }}
+              className="pulse"
+            >
+              75+
             </Typography>
-            <Typography variant="h6">
-              Tutorials
+            <Typography 
+              variant="h6" 
+              color="text.secondary"
+              sx={{ 
+                fontWeight: 600,
+                opacity: 0.8,
+              }}
+            >
+              📚 Learning Tutorials
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                mt: 1,
+                opacity: 0.6,
+                fontSize: '0.875rem',
+              }}
+            >
+              Interactive learning paths
             </Typography>
           </CardBox>
-          <CardBox sx={{ textAlign: 'center', py: 3 }}>
-            <Typography variant="h2" color="primary.main" sx={{ fontWeight: 700 }}>
-              2000+
+          
+          <CardBox 
+            className="floating"
+            sx={{ 
+              textAlign: 'center', 
+              py: 4,
+              position: 'relative',
+              overflow: 'hidden',
+              animationDelay: '0.4s',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '3px',
+                background: 'linear-gradient(90deg, #fa709a 0%, #fee140 100%)',
+              },
+            }}
+          >
+            <Typography 
+              variant="h2" 
+              sx={{ 
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 1,
+                fontSize: { xs: '2.5rem', md: '3rem' },
+              }}
+              className="pulse"
+            >
+              2.5K+
             </Typography>
-            <Typography variant="h6">
-              Developers
+            <Typography 
+              variant="h6" 
+              color="text.secondary"
+              sx={{ 
+                fontWeight: 600,
+                opacity: 0.8,
+              }}
+            >
+              👥 Community Members
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                mt: 1,
+                opacity: 0.6,
+                fontSize: '0.875rem',
+              }}
+            >
+              Global developer network
             </Typography>
           </CardBox>
         </Box>
       </Box>
       
-      {/* Call to Action */}
-      <CardBox sx={{ textAlign: 'center', py: 4, borderRadius: 3 }}>
-        <Typography variant="h3" gutterBottom>
-          Ready to Get Started?
+
+      
+      {/* Enhanced Call to Action */}
+      <CardBox 
+        sx={{ 
+          textAlign: 'center', 
+          py: 6, 
+          borderRadius: 4,
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(45deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%)',
+            animation: 'float 8s ease-in-out infinite',
+          },
+        }}
+        className="floating"
+      >
+        <Typography 
+          variant="h3" 
+          gutterBottom
+          sx={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            mb: 2,
+          }}
+        >
+          🚀 Ready to Start Your Journey?
         </Typography>
-        <Typography variant="h6" paragraph sx={{ mb: 3 }}>
-          Join our community today and start your journey in technology learning and contribution.
+        <Typography 
+          variant="h6" 
+          paragraph 
+          sx={{ 
+            mb: 4, 
+            maxWidth: '700px', 
+            mx: 'auto',
+            color: 'text.secondary',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            opacity: 0.9,
+          }}
+        >
+          Join thousands of innovative developers who are already building the future, learning cutting-edge technologies, and growing their careers with Three Eyed Coders.
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap' }}>
           <Button 
             variant="contained" 
-            color="primary" 
             size="large" 
-            href="https://github.com/three-eyed-coders"
-            sx={{ px: 4, py: 1.5 }}
+            component={RouterLink} 
+            to="/projects"
+            className="micro-bounce"
+            sx={{ 
+              px: 5, 
+              py: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 15px 35px rgba(102, 126, 234, 0.4)',
+                background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
+              },
+            }}
           >
-            Contribute on GitHub
+            🎯 Browse Projects
           </Button>
           <Button 
             variant="outlined" 
-            color="primary" 
             size="large" 
             component={RouterLink} 
-            to="/playground"
-            sx={{ px: 4, py: 1.5 }}
+            to="/tutorials"
+            className="micro-bounce"
+            sx={{ 
+              px: 5, 
+              py: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              borderRadius: '16px',
+              border: '2px solid transparent',
+              background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box',
+              color: '#667eea',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+                zIndex: -1,
+              },
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                color: 'white',
+                boxShadow: '0 15px 35px rgba(102, 126, 234, 0.3)',
+              },
+              '&:hover::before': {
+                opacity: 1,
+              },
+            }}
           >
-            Try Playground
+            📖 Start Learning
           </Button>
         </Box>
       </CardBox>
