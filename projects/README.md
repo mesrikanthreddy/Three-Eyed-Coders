@@ -17,7 +17,7 @@ This directory contains projects contributed by the Three Eyed Coders community.
 
 ## Project Guidelines
 
-- Projects should be related to AI/ML
+- Projects should be related to AI/ML with frontend and backend Integration
 - Include clear documentation
 - Ensure code is well-commented
 - Include a license (preferably MIT)
